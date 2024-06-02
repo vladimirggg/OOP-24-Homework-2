@@ -1,23 +1,9 @@
 #include "Criteria3Func.h"
 
-int Criteria3Func::getIndex(int x) const
-{
-    for(int i = 0; i < size; ++i)
-        if(args[i] == x) return i;
-    
-    return -1;
-}
+Criteria3Func::Criteria3Func(int* _args, size_t _size)
+    :CriteriaType(_args, _size){}
 
-Criteria3Func::Criteria3Func(int* _args, size_t _size){
-    if(size > MAX_SIZE) throw std::runtime_error("Number of arguments exceeds limit!");
-
-    size = _size;
-    for (size_t i = 0; i < size; i++)
-        args[i] = _args[i];
-    
-}
-
-PartialFunction* Criteria3Func::clone() const{
+CriteriaType* Criteria3Func::clone() const{
     return new Criteria3Func(*this);
 }
 
