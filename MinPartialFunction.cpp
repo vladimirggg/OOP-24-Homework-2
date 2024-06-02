@@ -2,36 +2,38 @@
 
 void MinPartialFunction::copyFrom(const MinPartialFunction& other){
     size = other.size;
+    funcs = new PartialFunction*[size];
+
     for (size_t i = 0; i < size; i++){
-        funcs[i] = other.funcs[i].clone();
+        funcs[i] = other.funcs[i]->clone();
     }
 }
 
-void MinPartialFunction::moveFrom(MinPartialFunction&& other){
+void MinPartialFunction::moveFrom(MinPartialFunction&& other) noexcept{
     size = other.size;
-    other.size = 0;
+//    other.size = 0;
 
-    for (size_t i = 0; i < size; i++){
-        funcs[i] = other.funcs[i];
-        other.funcs[i] = nullptr;
-    }
+    funcs = other.funcs;
+    other.funcs = nullptr;
 }
 
 void MinPartialFunction::free(){
     for (size_t i = 0; i < size; i++){
-        funcs[i] = nullptr;
+        delete[] funcs[i];
     }
+    delete[] funcs;
     size = 0;
 }
 
-MinPartialFunction::MinPartialFunction(): size(0) {}
+MinPartialFunction::MinPartialFunction(): funcs(nullptr), size(0) {}
 
-MinPartialFunction::MinPartialFunction(PartialFunction** _funcs, size_t _size){
+MinPartialFunction::MinPartialFunction(PartialFunction** _funcs, size_t _size) {
     if(size > MAX_SIZE) throw std::runtime_error("Number of arguments exceeds limit!");
 
     size = _size;
+    funcs = new PartialFunction* [size];
     for (size_t i = 0; i < _size; i++){
-        funcs[i] = _funcs[i]->clone();
+        this->funcs[i] = _funcs[i]->clone();
     }
 }
 
@@ -39,7 +41,7 @@ MinPartialFunction::MinPartialFunction(const MinPartialFunction& other){
     copyFrom(other);
 }
 
-MinPartialFunction::MinPartialFunction(MinPartialFunction&& other){
+MinPartialFunction::MinPartialFunction(MinPartialFunction&& other) noexcept{
     moveFrom(std::move(other));
 }
 
@@ -52,7 +54,7 @@ MinPartialFunction& MinPartialFunction::operator=(const MinPartialFunction& othe
     return *this;
 }
 
-MinPartialFunction& MinPartialFunction::operator=(MinPartialFunction&& other){
+MinPartialFunction& MinPartialFunction::operator=(MinPartialFunction&& other) noexcept{
     if(this != &other){
         free();
         moveFrom(std::move(other));
@@ -71,13 +73,16 @@ bool MinPartialFunction::isDefined(int x) const{
     return false;
 }
 
-resultPair MinPartialFunction::operator()(int x) const{
-    resultPair max;
+int MinPartialFunction::invoke(int x) const{
+    int min = INT_MAX;
     for (size_t i = 0; i < size; i++){
-        resultPair temp = funcs[i](x);
-        if(temp.second < max.second) max = temp;
+        if(!funcs[i]->isDefined(x)) continue;
+
+        int temp = funcs[i]->invoke(x);
+        if (temp < min)
+            min = temp;
     }
-    return max;
+    return min;
 }
 
 MinPartialFunction::~MinPartialFunction(){

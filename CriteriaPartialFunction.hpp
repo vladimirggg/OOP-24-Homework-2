@@ -1,5 +1,6 @@
 #pragma once
 #include "PartialFunction.h"
+#include "CriteriaType.h"
 #include <iostream>
 
 template <class Function>
@@ -10,15 +11,15 @@ public:
     explicit CriteriaPartialFunction(const Function& _func);
     PartialFunction* clone() const override;
     bool isDefined(int x) const override;
-    resultPair operator()(int x) const override;
+    int invoke(int x) const override;
     ~CriteriaPartialFunction() = default;
 };
 
 template<class Function>
-CriteriaPartialFunction<Function>::CriteriaPartialFunction(resultPair(*_func)(int)): func(_func), isObj(false){}
+CriteriaPartialFunction<Function>::CriteriaPartialFunction(resultPair(*_func)(int)): func(_func){}
 
 template <class Function>
-CriteriaPartialFunction<Function>::CriteriaPartialFunction(const Function& _func) : func(_func), isObj(true){}
+CriteriaPartialFunction<Function>::CriteriaPartialFunction(const Function& _func) : func(_func){}
 
 template<class Function>
 inline PartialFunction* CriteriaPartialFunction<Function>::clone() const{
@@ -31,6 +32,7 @@ bool CriteriaPartialFunction<Function>::isDefined(int x) const{
 }
 
 template <class Function>
-resultPair CriteriaPartialFunction<Function>::operator()(int x) const{
-    return func(x);
+int CriteriaPartialFunction<Function>::invoke(int x) const{
+    resultPair result = func(x);
+    return result.first ? result.second : throw std::invalid_argument("Undefined argument!");
 }
