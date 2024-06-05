@@ -23,7 +23,7 @@ Criteria1Func::Criteria1Func(int* _args, int* _results, size_t _size) : Criteria
         results[i] = _results[i];
 }
 
-Criteria1Func::Criteria1Func(const Criteria1Func& other){
+Criteria1Func::Criteria1Func(const Criteria1Func& other) : CriteriaType(other){
     copyFrom(other);
 }
 

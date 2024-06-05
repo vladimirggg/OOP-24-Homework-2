@@ -11,7 +11,6 @@ void MaxPartialFunction::copyFrom(const MaxPartialFunction& other){
 
 void MaxPartialFunction::moveFrom(MaxPartialFunction&& other) noexcept{
     size = other.size;
-//    other.size = 0;
 
     funcs = other.funcs;
     other.funcs = nullptr;
@@ -68,17 +67,15 @@ PartialFunction* MaxPartialFunction::clone() const{
 
 bool MaxPartialFunction::isDefined(int x) const{
     for (size_t i = 0; i < size; i++){
-        if(funcs[i]->isDefined(x)) return true;
+        if(!funcs[i]->isDefined(x)) return false;
     }
-    return false;
+    return true;
 }
 
 int MaxPartialFunction::invoke(int x) const{
     int max = INT_MIN;
     for (size_t i = 0; i < size; i++){
-        if(!funcs[i]->isDefined(x)) continue;
-
-        int temp = funcs[i]->invoke(x);
+        int temp = funcs[i]->invoke(x); //if undefined, throws an exception
         if (temp > max)
             max = temp;
     }

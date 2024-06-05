@@ -23,9 +23,9 @@ int main(){
     }
 
     short firstOuput[] = {7, 0};
-    int firstNumbers[] = {1, 2, 3, 5, 6, 7, 3, 3, 3, 4, 4, 0};
+    int firstNumbers[] = {0, 1, 2, 3, 5, 6, 7, 0, 3, 3, 3, 4, 4, 0};
     firstFile.write((char*) firstOuput, sizeof(short) * 2);
-    firstFile.write((char*) firstNumbers, sizeof(int) * 12);
+    firstFile.write((char*) firstNumbers, sizeof(int) * 14);
     firstFile.close();
     
     // SECOND.DAT
@@ -55,7 +55,7 @@ int main(){
 
     std::ifstream in("func.dat", std::ios::binary | std::ios::in);
     if(!in.is_open()){
-        std::cout<<"Error: Couldn't open file!";
+        std::cout<<"Error: Couldn't open file!\n";
         return 0;
     }
 
@@ -67,4 +67,19 @@ int main(){
     std::cout<<a;
     while(in.get(ch)) std::cout<<ch;
     in.close();
+
+    std::ifstream firstIn("first.dat", std::ios::binary | std::ios::in);
+    if(!firstIn.is_open()){
+        std::cout<<"Error opening first file!\n";
+    }
+    firstIn.read((char*) &b, sizeof(short));
+    std::cout<<'\n'<<b;
+    firstIn.read((char*) &b, sizeof(short));
+    std::cout<<b;
+    int *numArr = new int[12];
+    firstIn.read((char*) numArr, sizeof(int) * 12);
+    for (int i = 0; i < 12; ++i)
+        std::cout<<numArr[i];
+    delete[] numArr;
+    firstIn.close();
 }

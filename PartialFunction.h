@@ -8,6 +8,6 @@ class PartialFunction{
 public:
     virtual PartialFunction* clone() const = 0;
     virtual bool isDefined(int x) const = 0;
-    virtual int invoke(int x) const = 0; //invoke / getResult
+    virtual int invoke(int x) const = 0;
     virtual ~PartialFunction() = default;
 };

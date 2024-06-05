@@ -11,7 +11,6 @@ void MinPartialFunction::copyFrom(const MinPartialFunction& other){
 
 void MinPartialFunction::moveFrom(MinPartialFunction&& other) noexcept{
     size = other.size;
-//    other.size = 0;
 
     funcs = other.funcs;
     other.funcs = nullptr;
@@ -68,17 +67,15 @@ PartialFunction* MinPartialFunction::clone() const{
 
 bool MinPartialFunction::isDefined(int x) const{
     for (size_t i = 0; i < size; i++){
-        if(funcs[i]->isDefined(x)) return true;
+        if(!funcs[i]->isDefined(x)) return false;
     }
-    return false;
+    return true;
 }
 
 int MinPartialFunction::invoke(int x) const{
     int min = INT_MAX;
     for (size_t i = 0; i < size; i++){
-        if(!funcs[i]->isDefined(x)) continue;
-
-        int temp = funcs[i]->invoke(x);
+        int temp = funcs[i]->invoke(x);// if undefined, throws an exception
         if (temp < min)
             min = temp;
     }

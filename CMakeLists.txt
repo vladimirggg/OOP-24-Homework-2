@@ -18,4 +18,4 @@ add_executable(MyExecutable
         Criteria2Func.cpp
         Criteria3Func.cpp
         MaxPartialFunction.cpp
-        MinPartialFunction.cpp CriteriaType.h CriteriaType.cpp resultPair.h)
+        MinPartialFunction.cpp CriteriaType.h CriteriaType.cpp resultPair.h PartialFunctionProcessor.h PartialFunctionProcessor.cpp)

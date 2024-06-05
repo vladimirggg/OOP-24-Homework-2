@@ -8,12 +8,11 @@ CriteriaType* Criteria3Func::clone() const{
 }
 
 bool Criteria3Func::isDefined(int x) const{
-    if(getIndex(x) == -1) return false;
-    else return true;
+    return true;
 }
 
 resultPair Criteria3Func::operator()(int x) const{
     int index = getIndex(x);
-    if(index == -1) return {false, 0};
+    if(index == -1) return {true, 0};
     else return {true, 1};
 }
